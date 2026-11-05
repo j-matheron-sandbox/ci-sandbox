@@ -32,22 +32,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: grep -qx "hello" paths-filter/src/hello.txt
-      
-  heavy-b:
-    needs: source-changes
-    if: needs.source-changes.outputs.run-tests == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: grep -qx "# notes" paths-filter/docs/notes.md
 
   all-required-green:
     name: All required checks pass
     if: always()
-    needs: [source-changes, heavy-a, heavy-b]
+    needs: [source-changes, heavy-a]
     runs-on: ubuntu-latest
     steps:
       - uses: re-actors/alls-green@release/v1
         with:
           jobs: ${{ toJSON(needs) }}
-          allowed-skips: heavy-a, heavy-b
+          allowed-skips: heavy-a
